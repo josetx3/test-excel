@@ -77,8 +77,13 @@ export class AppComponent {
     if (!this.fechaInicio || !this.fechaFin) {
       this.registrosFiltrados = [...this.registros];
     } else {
-      const inicio = new Date(this.fechaInicio);
-      const fin = new Date(this.fechaFin);
+      // Crear fecha de inicio a las 00:00:00
+      const [anioI, mesI, diaI] = this.fechaInicio.split('-').map(Number);
+      const inicio = new Date(anioI, mesI - 1, diaI, 0, 0, 0, 0);
+
+      // Crear fecha fin a las 23:59:59
+      const [anioF, mesF, diaF] = this.fechaFin.split('-').map(Number);
+      const fin = new Date(anioF, mesF - 1, diaF, 23, 59, 59, 999);
 
       this.registrosFiltrados = this.registros.filter(r => {
         const fechaReg = new Date(r.fecha);
@@ -88,6 +93,7 @@ export class AppComponent {
 
     this.calcularResumen();
   }
+
 
   calcularResumen() {
     const mapa = new Map<string, number>();
